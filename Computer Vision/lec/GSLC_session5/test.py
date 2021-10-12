@@ -17,7 +17,7 @@ class Root:
         self.master=master
         master.title('Citra')
 
-        master.geometry("1000x1000")
+        master.geometry("500x400")
         master.configure(background="white")
   
         
@@ -35,7 +35,7 @@ class Root:
     def open_choose(self):
         
         choose_image= Toplevel(self.master)
-        choose_image.geometry("1000x1000")
+        choose_image.geometry("700x750")
         choose_image.title("Database Citra")
         self.citra=Frame(choose_image,bg="powder blue",bd=20,relief=RIDGE)
         self.citra.grid()
@@ -68,7 +68,7 @@ class Root:
     def open_citra(self,image):
         
         Db= Toplevel(self.master)
-        Db.geometry("1000x1000")
+        Db.geometry("450x450")
         Db.title("Database Citra")
         self.citra=Frame(Db,bg="powder blue",bd=20,relief=RIDGE)
         self.citra.grid()
