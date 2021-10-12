@@ -1,0 +1,13 @@
+project management-> usaha yang terintegrasi serta hal yang dilakukan terpaku dari sepuluh pengetahuan dari knowladge area
+
+Project management process groups berasal dari inisiasi dari planning, execute, monitoring, controlling dan close activity
+
+inisiasi->mendefinisikan dan menentukan fase pada project
+
+planning->mendefinisikan dan mengolah pekerjaan dan schema
+
+execute->dari planning dieksekusi
+
+monitoring and controlling->memastikan proses perkerjaan dan progress dari rencana yang telah ditentukan agar sesuai dengan planning
+
+closing->project dapat diterima

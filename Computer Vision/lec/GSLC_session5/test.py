@@ -9,7 +9,7 @@ import tkinter as tk
 from PIL import ImageTk, Image
 from functools import partial
 
-
+import glob
 
 
 class Root:
@@ -19,7 +19,8 @@ class Root:
 
         master.geometry("500x400")
         master.configure(background="white")
-  
+        # self.database=self.load_image("image/")
+        # self.choose=self
         
         
 
@@ -29,7 +30,13 @@ class Root:
         self.ABC1.grid(row=1,column=0,sticky=W)
         self.pencocokan("image/image0.jpg")
 
-        
+    
+    def load_image(str):
+        data=[]
+        for f in glob.iglob((str+"\*")):
+            image=cv2.imread(f)
+            data.append(image)
+        return data
 
 
     def open_choose(self):
@@ -96,7 +103,7 @@ class Root:
 
 
 
-    def pencocokan(self,image,image1="image/image0.jpg",percent=0):
+    def pencocokan(self,image,image1="image/image0.jpg",percent=float(0)):
         
         img1 = Image.open(image)
         img1=img1.resize((100,100))
@@ -113,6 +120,7 @@ class Root:
         label = Label(self.ABC1, image = photo1)
         label.image = photo1
         label.grid(row=1,column=2,pady=8,padx=8)
+        print(percent)
         if(percent!=0):
     
             information=Label(self.ABC1,text="persentase kemiripan= {0:.2f}%".format(percent))
@@ -126,7 +134,7 @@ class Root:
 
         
     def image_processing(self,image1):
-        check=0
+
         if(image1==""):
             self.pencocokan(image1,"image/notfound.jpg")
         num_image=0
@@ -143,15 +151,15 @@ class Root:
         img1=cv2.resize(img1,dim,interpolation=cv2.INTER_AREA)
         img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
         img1=cv2.equalizeHist(img1)
-        for i in range(0,9):
-            num_img2=""
+        num_img2=float(0)
+        for i in range(1,10):
+            
+            
             name_img2=""
-            if(i==0):
-                name_img2=image1
-            else:
+          
 
-                num_img2=str(i)
-                name_img2="image/image" +num_img2+".jpg"
+            num_img2=str(i)
+            name_img2="image/image" +num_img2+".jpg"
             
             img2=cv2.imread(name_img2)
             width=int(img2.shape[1]*scale_percent/100)
@@ -162,28 +170,46 @@ class Root:
             img2=cv2.equalizeHist(img2)
 
             #sift
-            sift = cv2.xfeatures2d.SIFT_create()
+           
 
-            keypoints_1, descriptors_1 = sift.detectAndCompute(img1,None)
-            keypoints_2, descriptors_2 = sift.detectAndCompute(img2,None)
+            sift=cv2.xfeatures2d.SIFT_create()
+            kp_1, desc_1= sift.detectAndCompute(img1,None)
+            kp_2, desc_2= sift.detectAndCompute(img2,None)
 
-            #feature matching
-            bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+            # print("kp1 : {}\n".format(len(kp_1)))
+            # print("kp2 : {}\n".format(len(kp_2)))
 
-            matches = bf.match(descriptors_1,descriptors_2)
-            matches = sorted(matches, key = lambda x:x.distance)
+            index_params=dict(algorithm=0,trees=5)
+            search_param=dict()
+            flann=cv2.FlannBasedMatcher(index_params,search_param)
+            matches=flann.knnMatch(desc_1,desc_2,k=2)
+            good_point=[]
+
+            for m,n in matches:
+                if(m.distance<0.6*n.distance):
+                    good_point.append(m)
+
+            num_keypoints=0
+
+            if(len(kp_1)<=len(kp_2)):
+                num_keypoints=len(kp_1)
+            else:
+                num_keypoints=len(kp_2)
+
+            # print("good matches :{}".format(good_point))
+
+            print("Percentase :{}".format(len(good_point)/num_keypoints*100))
+            similar=(len(good_point)/num_keypoints*100)
             
-            if(i==0):
-                check=len(matches)
-            elif(len(matches)>num_image):
+            if(similar>num_image):
                 path=name_img2
-                num_image=len(matches)
+                num_image=similar
                 
         if(num_image==0):
             self.pencocokan(image1,"image/notfound.jpg")
         else:
-            
-            self.pencocokan(image1,path,(min(num_image,check)/max(num_image,check)*100))
+    
+            self.pencocokan(image1,path,num_image)
     
     
     # my_button=Button(self)
