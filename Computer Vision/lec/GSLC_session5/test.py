@@ -145,12 +145,9 @@ class Root:
         
         path=""
         img1=cv2.imread(image1)
-        width=int(img1.shape[1]*scale_percent/100)
-        height=int(img1.shape[0]*scale_percent/100)
-        dim=(width,height)
-        img1=cv2.resize(img1,dim,interpolation=cv2.INTER_AREA)
+
         img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-        img1=cv2.equalizeHist(img1)
+        
         num_img2=float(0)
         for i in range(1,10):
             
@@ -162,17 +159,14 @@ class Root:
             name_img2="image/image" +num_img2+".jpg"
             
             img2=cv2.imread(name_img2)
-            width=int(img2.shape[1]*scale_percent/100)
-            height=int(img2.shape[0]*scale_percent/100)
-            dim=(width,height)
-            img2=cv2.resize(img2,dim,interpolation=cv2.INTER_AREA)
+
             img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-            img2=cv2.equalizeHist(img2)
+
 
             #sift
            
 
-            sift=cv2.xfeatures2d.SIFT_create()
+            sift=cv2.xfeatures2d.SIFT_create(400)
             kp_1, desc_1= sift.detectAndCompute(img1,None)
             kp_2, desc_2= sift.detectAndCompute(img2,None)
 
@@ -180,7 +174,7 @@ class Root:
             # print("kp2 : {}\n".format(len(kp_2)))
 
             index_params=dict(algorithm=0,trees=5)
-            search_param=dict()
+            search_param=dict(check=100)
             flann=cv2.FlannBasedMatcher(index_params,search_param)
             matches=flann.knnMatch(desc_1,desc_2,k=2)
             good_point=[]
@@ -197,7 +191,7 @@ class Root:
                 num_keypoints=len(kp_2)
 
             # print("good matches :{}".format(good_point))
-
+            
             print("Percentase :{}".format(len(good_point)/num_keypoints*100))
             similar=(len(good_point)/num_keypoints*100)
             
