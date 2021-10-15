@@ -39,7 +39,7 @@ class Root:
         
         choose_image= Toplevel(self.master)
         choose_image.geometry("700x750")
-        choose_image.title("Database Citra")
+        choose_image.title("Database pilihan")
         self.citra=Frame(choose_image,bg="powder blue",bd=20,relief=RIDGE)
         self.citra.grid()
         self.citra_image=Frame(self.citra,bg="Cadet blue",bd=10,relief=RIDGE)    
