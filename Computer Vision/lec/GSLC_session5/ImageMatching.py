@@ -13,7 +13,7 @@ if img1 is None or img2 is None:
     exit(0)
 #-- Step 1: Detect the keypoints using SURF Detector, compute the descriptors
 minHessian = 400
-detector = cv.xfeatures2d_SURF.create(minHessian)
+detector = cv.xfeatures2d_SURF.create(hessianThreshold=minHessian)
 keypoints1, descriptors1 = detector.detectAndCompute(img1, None)
 keypoints2, descriptors2 = detector.detectAndCompute(img2, None)
 #-- Step 2: Matching descriptor vectors with a FLANN based matcher

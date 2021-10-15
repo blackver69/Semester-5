@@ -1,16 +1,12 @@
 from os import name
 import cv2
+
 import matplotlib.pyplot as plt
-
 from tkinter import *
-
 import tkinter as tk
-
 from PIL import ImageTk, Image
 from functools import partial
-
 import glob
-
 
 class Root:
     def __init__(self,master):
